@@ -8,3 +8,4 @@ def handle_solution(solution: any, expected_output: Optional[int] = None):
         return
 
     print(solution)
+    return solution

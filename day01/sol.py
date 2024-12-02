@@ -64,7 +64,7 @@ def solve_part2(input_path: str, expected_output: Optional[int] = None):
     handle_solution(sol, expected_output)
 
 
-def day1():
+def day01():
     solve_part1(EXAMPLE_PATH, 11)
     solve_part1(INPUT_PATH, 1970720)
     solve_part2(EXAMPLE_PATH, 31)
@@ -72,4 +72,4 @@ def day1():
 
 
 if __name__ == "__main__":
-    day1()
+    day01()
