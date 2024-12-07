@@ -30,20 +30,22 @@ def get_concat_num(n1: int, n2: int):
     return int(str(n1) + str(n2))
 
 
-def is_solution_possible(answer: int, numbers: List[int], answer_so_far: int, can_concatenate: bool = False):
+def is_solution_possible(
+    answer: int, numbers: List[int], index: int, answer_so_far: int, can_concatenate: bool = False
+):
     if answer_so_far > answer:
         return False
 
-    if len(numbers) == 0:
+    if index >= len(numbers):
         return answer_so_far == answer
 
-    n1 = numbers[0]
+    n1 = numbers[index]
     return (
-        is_solution_possible(answer, numbers[1:], answer_so_far + n1, can_concatenate)
-        or is_solution_possible(answer, numbers[1:], answer_so_far * n1, can_concatenate)
+        is_solution_possible(answer, numbers, index + 1, answer_so_far + n1, can_concatenate)
+        or is_solution_possible(answer, numbers, index + 1, answer_so_far * n1, can_concatenate)
         or (
             can_concatenate
-            and is_solution_possible(answer, numbers[1:], get_concat_num(answer_so_far, n1), can_concatenate)
+            and is_solution_possible(answer, numbers, index + 1, get_concat_num(answer_so_far, n1), can_concatenate)
         )
     )
 
@@ -52,7 +54,7 @@ def solve_part1(input_path: str, expected_output: Optional[int] = None, is_part2
     sol = 0
     answers, list_numbers = get_parsed_input(input_path)
     for answer, numbers in zip(answers, list_numbers):
-        if is_solution_possible(answer, numbers[1:], numbers[0], is_part2):
+        if is_solution_possible(answer, numbers, 1, numbers[0], is_part2):
             sol += answer
 
     handle_solution(sol, expected_output)
