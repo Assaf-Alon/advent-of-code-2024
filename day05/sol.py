@@ -6,18 +6,12 @@ import re
 from typing import DefaultDict, List, Optional, Tuple
 import graphlib
 
-from common import handle_solution
+from common import handle_solution, read_input_as_lines
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 EXAMPLE_PATH = dir_path + os.sep + "example.txt"
 INPUT_PATH = dir_path + os.sep + "input.txt"
-
-
-def read_input_as_lines(input_path: str) -> List[str]:
-    with open(input_path) as f:
-        lines = f.readlines()
-        return lines
 
 
 def parse_input(input: List[str]):

@@ -20,3 +20,9 @@ def read_input_as_matrix(input_path: str) -> List[List[str]]:
 def read_input_as_string(input_path: str) -> str:
     with open(input_path) as f:
         return f.read()
+
+
+def read_input_as_lines(input_path: str) -> List[str]:
+    with open(input_path) as f:
+        lines = f.readlines()
+        return [line.removesuffix("\n") for line in lines]
