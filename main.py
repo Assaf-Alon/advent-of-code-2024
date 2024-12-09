@@ -8,7 +8,9 @@ from day03.sol import day03
 from day04.sol import day04
 from day05.sol import day05
 from day06.sol import day06
-from day07.sol import day07
+
+# from day07.sol import day07
+from day08.sol import day08
 
 # day01()
 # day02()
@@ -16,4 +18,5 @@ from day07.sol import day07
 # day04()
 # day05()
 # day06()
-day07()
+# day07()
+day08()
