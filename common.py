@@ -26,3 +26,7 @@ def read_input_as_lines(input_path: str) -> List[str]:
     with open(input_path) as f:
         lines = f.readlines()
         return [line.removesuffix("\n") for line in lines]
+
+
+def is_in_board(rows, cols, row, col):
+    return 0 <= row < rows and 0 <= col < cols
