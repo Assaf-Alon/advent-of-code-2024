@@ -3,7 +3,7 @@ import os
 import re
 from typing import DefaultDict, Dict, List, Optional, Set, Tuple
 
-from common import handle_solution, is_in_board, read_input_as_lines, read_input_as_matrix
+from common import DIRECTIONS_RDLU, handle_solution, is_in_board, read_input_as_lines, read_input_as_matrix
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -51,16 +51,12 @@ class UnionFind:
             self._add_aux(row, col, row, col - 1)
             return
 
-        print(f"Started new shape [{matrix[row][col]}] at {row, col}")
         self.coord_to_id[(row, col)] = (row, col)
         self.id_to_all_nodes[(row, col)] = set((row, col))
 
 
 def get_parsed_input(input_path: str):
     return read_input_as_matrix(input_path)
-
-
-# def calculate_shape_perimeter(top, shape: Dict[Tuple[int, int], Set[Tuple[int, int]]]):
 
 
 def get_new_perimeter(matrix: List[List[int]], letter: str, row: int, col: int):
@@ -71,7 +67,6 @@ def get_new_perimeter(matrix: List[List[int]], letter: str, row: int, col: int):
         new_perimeter -= 2
     if is_in_board(rows, cols, row - 1, col) and matrix[row - 1][col] == letter:
         new_perimeter -= 2
-    print(f" >> New perimeter for {letter} in {row, col}: {new_perimeter}")
     return new_perimeter
 
 
@@ -86,7 +81,7 @@ def eat_shape_up(matrix: List[List[int]], letter: str, row: int, col: int, visit
         return 0
     visited.add((row, col))
     added_perimeters = get_new_perimeter(matrix, letter, row, col)
-    for r, c in ((0, 1), (1, 0), (0, -1), (-1, 0)):
+    for r, c in DIRECTIONS_RDLU:
         if is_in_board(rows, cols, row + r, col + c):
             added_perimeters += eat_shape_up(matrix, letter, row + r, col + c, visited)
     return added_perimeters
@@ -105,33 +100,11 @@ def eat_all_shapes_up(matrix: List[List[int]]):
             old_visited_len = len(visited)
             perimeter = eat_shape_up(matrix, letter, row, col, visited)
             area = len(visited) - old_visited_len
-            if area == 0:
-                print(f"No new visited on {row, col}")
-                continue
-            if perimeter == 0:
-                print(f" >>> I think this doesn't make sense...")
-            print(f"Ate shape {letter} that starts at {row}, {col}")
-            print(f" > Adding {perimeter} * {area} = {perimeter * area}")
             sol += perimeter * area
     return sol
 
 
 #############################################
-
-
-def all_neighbors_within_set(row: int, col: int, blocks: Set[Tuple[int, int]]) -> bool:
-    ans = True
-    for r, c in ((1, 0), (0, 1), (-1, 0), (0, -1)):
-        ans = ans and (row + r, col + c) in blocks
-    return ans
-
-
-def remove_internal_blocks(blocks: Set[Tuple[int, int]]) -> Set[Tuple[int, int]]:
-    new_blocks = blocks.copy()
-    for row, col in blocks:
-        if all_neighbors_within_set(row, col, blocks):
-            new_blocks.remove((row, col))
-    return new_blocks
 
 
 def side_counter(blocks: Set[Tuple[int, int]]) -> int:
@@ -167,11 +140,6 @@ def side_counter(blocks: Set[Tuple[int, int]]) -> int:
     return cnt * 2
 
 
-# def get_sides_count(blocks: Set[Tuple[int, int]]):
-#     external_blocks = remove_internal_blocks(blocks)
-#     visited = set()
-
-
 def eat_shape_up_p2(matrix: List[List[int]], letter: str, row: int, col: int, visited: Set[Tuple[int, int]]):
     if (row, col) in visited:
         return 0
@@ -182,7 +150,7 @@ def eat_shape_up_p2(matrix: List[List[int]], letter: str, row: int, col: int, vi
     if matrix[row][col] != letter:
         return 0
     visited.add((row, col))
-    for r, c in ((0, 1), (1, 0), (0, -1), (-1, 0)):
+    for r, c in DIRECTIONS_RDLU:
         if is_in_board(rows, cols, row + r, col + c):
             eat_shape_up_p2(matrix, letter, row + r, col + c, visited)
 
@@ -202,32 +170,15 @@ def eat_all_shapes_up_p2(matrix: List[List[int]]):
             eat_shape_up_p2(matrix, letter, row, col, all_visited)
             new_visited = all_visited.difference(old_all_visited)
             shapes_list.append(new_visited)
-            if letter == "C":
-                print("c!!!!CCC")
             sides = side_counter(new_visited)
             area = len(new_visited)
-            print(f"Ate shape {letter} that starts at {row}, {col}. Sides: {sides}")
-            print(f" > Adding {sides} * {area} = {sides * area}")
             sol += sides * area
-    print(shapes_list)
     return sol
 
 
-# def populate_union_find(matrix: List[List[int]], uf: UnionFind):
-#     rows = len(matrix)
-#     cols = len(matrix[0])
-#     for row in range(rows):
-#         for col in range(cols):
-#             uf.add(matrix, row, col)
-
-
 def solve_part1(input_path: str, expected_output: Optional[int] = None):
-    # sol = 0
-    # uf = UnionFind()
     matrix = get_parsed_input(input_path)
     sol = eat_all_shapes_up(matrix)
-    # populate_union_find(matrix, uf)
-    # ...
 
     handle_solution(sol, expected_output)
 

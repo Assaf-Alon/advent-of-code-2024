@@ -1,5 +1,8 @@
 from typing import List, Optional
 
+DIRECTIONS_RDLU = ((0, 1), (1, 0), (0, -1), (-1, 0))
+DIRECTIONS_WITH_DIAG = ((0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1))
+
 
 def handle_solution(solution: any, expected_output: Optional[int] = None):
     if expected_output:
