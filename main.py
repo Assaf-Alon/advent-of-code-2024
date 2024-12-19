@@ -20,6 +20,7 @@ from day15.sol import day15
 from day16.sol import day16
 from day17.sol import day17
 from day18.sol import day18
+from day19.sol import day19
 
 # day01()
 # day02()
@@ -38,4 +39,5 @@ from day18.sol import day18
 # day15()
 # day16()
 # day17()
-day18()
+# day18()
+day19()
