@@ -36,6 +36,10 @@ def is_in_board(rows, cols, row, col):
     return 0 <= row < rows and 0 <= col < cols
 
 
+def subtract_2d_vectors(vec1: Tuple[int, int], vec2: Tuple[int, int]) -> Tuple[int, int]:
+    return (vec1[0] - vec2[0], vec1[1] - vec2[1])
+
+
 def add_2d_vectors(vec1: Tuple[int, int], vec2: Tuple[int, int]) -> Tuple[int, int]:
     return (vec1[0] + vec2[0], vec1[1] + vec2[1])
 
