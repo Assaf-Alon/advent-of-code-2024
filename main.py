@@ -1,7 +1,3 @@
-from collections import defaultdict
-import re
-from typing import DefaultDict, List, Optional, Tuple
-
 from day01.sol import day01
 from day02.sol import day02
 from day03.sol import day03
@@ -25,6 +21,7 @@ from day20.sol import day20
 from day21.sol import day21
 from day22.sol import day22
 from day23.sol import day23
+from day24.sol import day24
 
 # day01()
 # day02()
@@ -48,4 +45,5 @@ from day23.sol import day23
 # day20()
 # day21()
 # day22()
-day23()
+# day23()
+day24()
