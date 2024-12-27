@@ -1,12 +1,10 @@
+# Manual work for part 2 :(
+# In retrospect, I could've done more to automate things
 from collections import defaultdict
 from copy import deepcopy
-import functools
-from math import inf
 from operator import and_, or_, xor
 import os
-from pprint import pprint
-from typing import DefaultDict, Dict, List, Optional, Set, Tuple
-
+from typing import DefaultDict, Dict, List, Optional, Tuple
 
 from common import handle_solution, read_input_as_lines
 
@@ -16,7 +14,6 @@ EXAMPLE_PATH = dir_path + os.sep + "example.txt"
 EXAMPLE2_PATH = dir_path + os.sep + "example2.txt"
 EXAMPLE_EVAL_PATH = dir_path + os.sep + "evals.txt"
 INPUT_PATH = dir_path + os.sep + "input.txt"
-ACTIVE_PATH = INPUT_PATH
 
 DEBUG = False
 
@@ -171,6 +168,26 @@ def expected_addition_result_binary(graph: DefaultDict[str, Node], output_length
     return res_bin
 
 
+def print_path_to_output_bit(graph: DefaultDict[str, Node], output: str):
+    to_check = [output]
+    depends_on_inputs = set()
+    while to_check:
+        n = to_check.pop(0)
+        node = graph[n]
+        input_nodes = node.inputs
+        if len(input_nodes) == 0:
+            depends_on_inputs.add(n)
+            continue
+
+        w1, w2 = input_nodes
+        print(f"{w1} {node.eval_method} {w2} --> {n}")
+        to_check.extend([w1, w2])
+    expeected_dependencies = (int(output[1:]) + 1) * 2
+    print(f"Depends on: {sorted(list(depends_on_inputs))}")
+    if expeected_dependencies != len(depends_on_inputs):
+        print(" !!!!!!!!!!!!!!!!!! SOMETHING IS PHISHY!!!")
+
+
 def solve_part2(input_path: str, expected_output: Optional[int] = None):
     sol = ""
     graph, outputs = get_parsed_input(input_path)
@@ -178,13 +195,51 @@ def solve_part2(input_path: str, expected_output: Optional[int] = None):
     actual = get_outcome_in_binary(graph, outputs)
     print(f"expected: {expected}")
     print(f"actual:   {actual}")
+    # first_bit_mismatch = ([int(c1) ^ int(c2) for c1, c2 in zip(expected, actual)])[::-1].index(1)
+    # print(f"FIRST MISMATCH = {first_bit_mismatch}")
+    # print(f"FIRST MISMATCH = {outputs[-first_bit_mismatch-1]}")
+    # print_path_to_output_bit(graph, outputs[-first_bit_mismatch - 1])
+    # for i, output in enumerate(reversed(outputs)):
+    #     print_path_to_output_bit(graph, output)
+    #     input(f"Makes Sense? ({i} / {len(outputs) - 1}) ")
+
+    # y05 AND x05 -> z05 - WRONG!
+    # > z05 should be the  (x05 XOR y05) XOR <previous carry>
+    # > x05 XOR y05 -> wcq  // wcq is the result without carry
+    # > knc XOR wcq -> gdd  // gdd is the result with carry (which should've been z05)
+    # > z05 swapped with gdd!
+    # >> FIRST SWAP - z05, gdd
+
+    # kvg OR sgj --> z09 - WRONG!
+    # > z's should be results of XORs!
+    # > Should be the result of (x09 XOR y09) and the previous carry
+    # > x09 XOR y09 == jnf
+    # > jnf XOR wgh -> cwt
+    # >> SECOND SWAP - z09, cwt
+
+    # vch XOR css --> z20 - WRONG!
+    # > y20 AND x20 --> css, should be the carry to the NEXT ONE
+    # > vch is indeed the other value
+    # > jmv is the relevant XOR
+    # >> THIRD SWAP - css, jmv
+
+    # vcr AND nwb -> z37 - WRONG!
+    # > z37 should be the XOR of x37,y37 and the carry
+    # > y37 XOR x37 -> vcr
+    # > In actuallity, this wire is part of the carry to z38
+    #   > If the 37th bit should've been on, but a previous carry zeroed it
+    #   > hjg is the full carry
+    #   > dgn OR pqt -> hjg
+    #   > x37 AND y37 -> dgn
+    #   > vcr XOR nwb -> pqt
+    # FOURTH SWAP - z37, pqt
+    handle_solution(",".join(sorted(["z05", "gdd", "z09", "cwt", "css", "jmv", "z37", "pqt"])), expected_output)
 
 
 def day24():
     solve_part1(EXAMPLE_PATH, 2024)
     solve_part1(INPUT_PATH, 61495910098126)
-    # solve_part2(EXAMPLE_PATH)
-    # solve_part2(INPUT_PATH)
+    solve_part2(INPUT_PATH)
 
 
 if __name__ == "__main__":
